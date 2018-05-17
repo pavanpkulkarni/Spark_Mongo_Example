@@ -26,24 +26,25 @@ object SparkScalaMongo {
 
     //Read data from MongoDB
     val studentsDF = MongoSpark.load(spark)
-	  studentsDF.show(false)
+    studentsDF.show(false)
 
-	  //Print schema
+    //Print schema
     studentsDF.printSchema()
 
     //Write data to Mongo
-	  import spark.implicits._
-	  
+    import spark.implicits._
+
     val listOfCoursesSem = List(cid_sem("CS003", "Spring_2011"),
                                 cid_sem("CS006", "Summer_2011"),
                                 cid_sem("CS009", "Fall_2011"))
-    val newStudents = Seq(students_cc(12, "2011", listOfCoursesSem, "Black Panther")).toDF()
-	  
-	  //MongoSpark.save(newStudents.write.mode(SaveMode.Overwrite))
-	  
-	  //Load data again to check if the insert was successful
-	  val studentsData = MongoSpark.load(spark)
-	  studentsData.show(false)
+    val newStudents =
+      Seq(students_cc(12, "2011", listOfCoursesSem, "Black Panther")).toDF()
+
+    MongoSpark.save(newStudents.write.mode(SaveMode.Overwrite))
+
+    //Load data again to check if the insert was successful
+    val studentsData = MongoSpark.load(spark)
+    studentsData.show(false)
 
   }
 }
